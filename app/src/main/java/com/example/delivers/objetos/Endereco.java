@@ -4,8 +4,10 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity
-public class Endereco {
+public class Endereco implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -86,7 +88,7 @@ public class Endereco {
     }
 
     public String toString(){
-        return "Rua: " + getNomeRua() + ", N° " + getNumero() + ", Bairro " + getNomeBairro();
+        return  getNomeRua() + ", N° " + getNumero() + ", Bairro " + getNomeBairro();
     }
 }
 

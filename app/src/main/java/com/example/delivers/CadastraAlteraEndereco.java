@@ -1,6 +1,7 @@
 package com.example.delivers;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.os.Bundle;
 import android.view.View;
@@ -9,15 +10,23 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.delivers.arquivosDAO.EnderecosDAO;
+import com.example.delivers.arquivosDAO.RoomDao;
+import com.example.delivers.databases.EnderecosDatabase;
 import com.example.delivers.objetos.Endereco;
 
 public class CadastraAlteraEndereco extends AppCompatActivity {
+
+    private EnderecosDatabase dataBase;
+    private RoomDao daoEndereco;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_cadastra_altera_endereco);
         setTitle("Atualiza / Cadastra Endereço");
+
+        dataBase = Room.databaseBuilder
+                (this, EnderecosDatabase.class, "enderecos.db").allowMainThreadQueries().build();
 
         final EditText campoNomedaRua = findViewById(R.id.formulario_nome_da_rua);
         final EditText campoNumero = findViewById(R.id.numero_da_casa);
@@ -40,8 +49,10 @@ public class CadastraAlteraEndereco extends AppCompatActivity {
 
                 Endereco novoEndereco = new Endereco(nomeDoEndereco, rua, bairro, numero, complemento, dica);
 
-                EnderecosDAO enderecosDAO = new EnderecosDAO();
-                enderecosDAO.salvaEndereco(novoEndereco);
+                daoEndereco = Room.databaseBuilder(CadastraAlteraEndereco.this, EnderecosDatabase.class, "enderecos.db")
+                        .allowMainThreadQueries().build().getRoomEnderecoDao();
+
+                daoEndereco.salvaEndereco(novoEndereco);
 
                 Toast.makeText(CadastraAlteraEndereco.this,  "Endereço " + novoEndereco.toString(),
                         Toast.LENGTH_LONG).show();
